@@ -108,7 +108,7 @@ export function generateExam(lectures: Lecture[], config: ExamConfig): ExamQuest
 
   const shuffled = shuffle(allSentencesFlat);
   const questions: ExamQuestion[] = [];
-  const types = config.questionTypes.length > 0 ? config.questionTypes : ['mcq'];
+  const types: QuestionType[] = config.questionTypes.length > 0 ? config.questionTypes : ['mcq'];
 
   let i = 0;
   let attempts = 0;

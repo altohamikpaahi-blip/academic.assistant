@@ -1,58 +1,69 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getLastSemester, setLastSemester } from '../lib/db';
+// src/context/AppContext.tsx
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { colleges, semesters, courses } from '../data/courses';
+import { College, Semester, Course } from '../types';
 
-export type Screen =
-  | { name: 'login' }
-  | { name: 'courses'; semester: number }
-  | { name: 'course'; courseId: string; semester: number }
-  | { name: 'dashboard' };
-
-interface AppContextValue {
-  screen: Screen;
-  navigate: (screen: Screen) => void;
-  goBack: () => void;
-  darkMode: boolean;
-  toggleDarkMode: () => void;
+interface AppContextType {
+  selectedCollege: College | null;
+  setSelectedCollege: (college: College | null) => void;
+  availableSemesters: Semester[];
+  selectedSemester: Semester | null;
+  setSelectedSemester: (semester: Semester | null) => void;
+  availableCourses: Course[];
 }
 
-const AppContext = createContext<AppContextValue | null>(null);
+const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export function AppProvider({ children }: { children: React.ReactNode }) {
-  const lastSemester = getLastSemester();
-  const [history, setHistory] = useState<Screen[]>([
-    lastSemester ? { name: 'courses', semester: lastSemester } : { name: 'login' },
-  ]);
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('aa_dark_mode') === '1';
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [selectedCollege, setSelectedCollegeState] = useState<College | null>(() => {
+    const saved = localStorage.getItem('selected_college');
+    if (saved) {
+      const found = colleges.find(c => c.id === saved);
+      if (found) return found;
+    }
+    return colleges[0]; // الكلية الافتراضية
   });
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode);
-    localStorage.setItem('aa_dark_mode', darkMode ? '1' : '0');
-  }, [darkMode]);
+  const [selectedSemester, setSelectedSemester] = useState<Semester | null>(null);
 
-  const navigate = (screen: Screen) => {
-    if (screen.name === 'courses') setLastSemester(screen.semester);
-    setHistory((h) => [...h, screen]);
+  const setSelectedCollege = (college: College | null) => {
+    setSelectedCollegeState(college);
+    if (college) {
+      localStorage.setItem('selected_college', college.id);
+    } else {
+      localStorage.removeItem('selected_college');
+    }
+    setSelectedSemester(null); // إعادة تعيين السمستر عند تغير الكلية
   };
 
-  const goBack = () => {
-    setHistory((h) => (h.length > 1 ? h.slice(0, -1) : h));
-  };
+  const availableSemesters = selectedCollege 
+    ? semesters.filter(s => s.collegeId === selectedCollege.id)
+    : [];
 
-  const value: AppContextValue = {
-    screen: history[history.length - 1],
-    navigate,
-    goBack,
-    darkMode,
-    toggleDarkMode: () => setDarkMode((d) => !d),
-  };
+  const availableCourses = selectedSemester
+    ? courses.filter(c => c.semesterId === selectedSemester.id)
+    : [];
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
-}
+  return (
+    <AppContext.Provider
+      value={{
+        selectedCollege,
+        setSelectedCollege,
+        availableSemesters,
+        selectedSemester,
+        setSelectedSemester,
+        availableCourses
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
+};
 
-export function useApp() {
-  const ctx = useContext(AppContext);
-  if (!ctx) throw new Error('useApp لازم يتستخدم جوه AppProvider');
-  return ctx;
-}
+export const useApp = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useApp must be used within an AppProvider');
+  }
+  return context;
+};

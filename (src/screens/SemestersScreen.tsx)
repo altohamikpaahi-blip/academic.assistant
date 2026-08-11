@@ -1,0 +1,48 @@
+// src/screens/SemestersScreen.tsx
+import React from 'react';
+import { useApp } from '../context/AppContext';
+import { Calendar, ChevronLeft } from 'lucide-react';
+
+export const SemestersScreen: React.FC = () => {
+  const { selectedCollege, availableSemesters, setSelectedSemester } = useApp();
+
+  return (
+    <div className="p-6 max-w-4xl mx-auto" dir="rtl">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">اختر السمستر الدراسي</h2>
+        <p className="text-sm text-gray-500 mt-1">
+          الكلية الحالية: <span className="font-semibold text-indigo-600">{selectedCollege?.name}</span>
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {availableSemesters.map((semester) => (
+          <button
+            key={semester.id}
+            onClick={() => setSelectedSemester(semester)}
+            className="flex items-center justify-between p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-indigo-500 hover:shadow-md transition-all text-right group cursor-pointer"
+          >
+            <div className="flex items-center space-x-4 space-x-reverse">
+              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                <Calendar className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600">
+                  {semester.name}
+                </h3>
+                <p className="text-xs text-gray-500">عرض المواد والمقررات الدراسية</p>
+              </div>
+            </div>
+            <ChevronLeft className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transform group-hover:-translate-x-1 transition-transform" />
+          </button>
+        ))}
+
+        {availableSemesters.length === 0 && (
+          <div className="col-span-2 text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+            <p className="text-gray-500">لا توجد سمسترات مضافة لهذه الكلية حالياً.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

@@ -1,31 +1,51 @@
-import type { Course } from '../types';
+// src/data/courses.ts
+import { College, Semester, Course } from '../types';
 
-// عدّل القائمة دي بمقررات كليتك الفعلية.
-// كل مقرر لازم يكون ليه id فريد ورقم semester من 1 إلى 10.
-export const COURSES: Course[] = [
-  { id: 'c101', semester: 1, name: 'مبادئ البرمجة', code: 'CS101' },
-  { id: 'c102', semester: 1, name: 'رياضيات 1', code: 'MTH101' },
-  { id: 'c103', semester: 1, name: 'أساسيات اللغة الإنجليزية', code: 'ENG101' },
-
-  { id: 'c201', semester: 2, name: 'هياكل البيانات', code: 'CS102' },
-  { id: 'c202', semester: 2, name: 'رياضيات 2', code: 'MTH102' },
-
-  { id: 'c301', semester: 3, name: 'قواعد البيانات', code: 'CS201' },
-  { id: 'c302', semester: 3, name: 'أنظمة التشغيل', code: 'CS202' },
-
-  { id: 'c401', semester: 4, name: 'شبكات الحاسب', code: 'CS203' },
-  { id: 'c402', semester: 4, name: 'هندسة البرمجيات', code: 'CS204' },
-
-  { id: 'c501', semester: 5, name: 'الذكاء الاصطناعي', code: 'CS301' },
-  { id: 'c601', semester: 6, name: 'أمن المعلومات', code: 'CS302' },
-  { id: 'c701', semester: 7, name: 'تطوير تطبيقات الموبايل', code: 'CS401' },
-  { id: 'c801', semester: 8, name: 'مشروع التخرج 1', code: 'CS402' },
-  { id: 'c901', semester: 9, name: 'مشروع التخرج 2', code: 'CS403' },
-  { id: 'c1001', semester: 10, name: 'التدريب الميداني', code: 'CS404' },
+export const colleges: College[] = [
+  {
+    id: 'cs_it',
+    name: 'كلية علوم الحاسوب وتقانة المعلومات',
+    code: 'CSIT',
+    description: 'علوم الحاسوب، تقانة المعلومات، ونظم المعلومات',
+    icon: 'Cpu'
+  },
+  {
+    id: 'engineering',
+    name: 'كلية الهندسة',
+    code: 'ENG',
+    description: 'الهندسة بkافة تخصصاتها',
+    icon: 'Wrench'
+  }
 ];
 
-export function coursesForSemester(semester: number): Course[] {
-  return COURSES.filter((c) => c.semester === semester);
-}
+export const semesters: Semester[] = [
+  // سمسترات كلية علوم الحاسوب
+  { id: 'cs_sem_1', collegeId: 'cs_it', name: 'السمستر الأول', number: 1 },
+  { id: 'cs_sem_2', collegeId: 'cs_it', name: 'السمستر الثاني', number: 2 },
+  { id: 'cs_sem_3', collegeId: 'cs_it', name: 'السمستر الثالث', number: 3 },
+  { id: 'cs_sem_4', collegeId: 'cs_it', name: 'السمستر الرابع', number: 4 },
+  
+  // سمسترات كلية الهندسة (مثال)
+  { id: 'eng_sem_1', collegeId: 'engineering', name: 'السمستر الأول', number: 1 },
+];
 
-export const ALL_SEMESTERS = Array.from({ length: 10 }, (_, i) => i + 1);
+export const courses: Course[] = [
+  {
+    id: 'c_intro_cs',
+    semesterId: 'cs_sem_1',
+    collegeId: 'cs_it',
+    name: 'مقدمة في علوم الحاسوب',
+    code: 'CS101',
+    credits: 3,
+    description: 'أساسيات الحوسبة، البرمجيات، والمكونات المادية.'
+  },
+  {
+    id: 'c_prog_1',
+    semesterId: 'cs_sem_1',
+    collegeId: 'cs_it',
+    name: 'برمجة هيكلية (1)',
+    code: 'CS102',
+    credits: 3,
+    description: 'أساسيات البرمجة بلغة C أو Python.'
+  }
+];

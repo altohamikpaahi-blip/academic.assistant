@@ -17,20 +17,20 @@ export interface Semester {
 
 export interface Course {
   id: string;
-  semesterId: string;
-  collegeId: string;
+  semesterId?: string;
+  collegeId?: string;
   name: string;
   code: string;
   description?: string;
   credits?: number;
 }
 
-// الأنواع الحالية الخاصة بالمستخدم، المحاضرات، الامتحانات، والمحادثة...
 export interface Lecture {
   id: string;
   courseId: string;
   title: string;
-  content: string;
+  content?: string;
+  text?: string; // لدعم خاصية text في توليد الامتحانات
   fileUrl?: string;
 }
 
@@ -42,4 +42,3 @@ export interface ExamQuestion {
   correctAnswer: number;
   explanation?: string;
 }
- 

@@ -1,62 +1,45 @@
-// أنواع البيانات الأساسية في التطبيق
+// src/types.ts
+
+export interface College {
+  id: string;
+  name: string;
+  code: string;
+  description?: string;
+  icon?: string;
+}
+
+export interface Semester {
+  id: string;
+  collegeId: string;
+  name: string;
+  number: number;
+}
 
 export interface Course {
   id: string;
-  semester: number; // 1 إلى 10
+  semesterId: string;
+  collegeId: string;
   name: string;
-  code?: string;
+  code: string;
+  description?: string;
+  credits?: number;
 }
 
+// الأنواع الحالية الخاصة بالمستخدم، المحاضرات، الامتحانات، والمحادثة...
 export interface Lecture {
   id: string;
   courseId: string;
-  fileName: string;
-  addedAt: number;
-  text: string; // النص المستخرج من الملف (PDF/Word/TXT)
-}
-
-export interface ChatMessage {
-  id: string;
-  courseId: string;
-  role: 'user' | 'assistant';
+  title: string;
   content: string;
-  createdAt: number;
-  sourceLectureNames?: string[]; // أسماء المحاضرات اللي اتسحب منها الرد
+  fileUrl?: string;
 }
-
-export type QuestionType = 'mcq' | 'true_false' | 'fill_blank';
 
 export interface ExamQuestion {
   id: string;
-  type: QuestionType;
+  courseId: string;
   question: string;
-  options?: string[]; // للـ mcq فقط
-  correctAnswer: string;
-  sourceLectureId: string;
+  options: string[];
+  correctAnswer: number;
+  explanation?: string;
 }
-
-export interface ExamConfig {
-  questionCount: number;
-  questionTypes: QuestionType[];
-  lectureIds: string[]; // المحاضرات المختارة لتوليد الامتحان منها
-}
-
-export interface ExamResult {
-  id: string;
-  courseId: string;
-  takenAt: number;
-  totalQuestions: number;
-  correctCount: number;
-  scorePercent: number;
-  config: ExamConfig;
-}
-
-export interface StudyReminder {
-  id: string;
-  courseId: string;
-  hour: number; // 0-23
-  minute: number; // 0-59
-  daysOfWeek: number[]; // 1(أحد) إلى 7(سبت)
-  enabled: boolean;
-  label: string;
-}
+ 

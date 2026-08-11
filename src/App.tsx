@@ -1,31 +1,26 @@
 import React from 'react';
 import { AppProvider, useApp } from './context/AppContext';
-import { LoginScreen } from './screens/LoginScreen';
-import { CoursesScreen } from './screens/CoursesScreen';
-import { CourseReviewScreen } from './screens/CourseReviewScreen';
-import { DashboardScreen } from './screens/DashboardScreen';
+import { CollegeSelectionScreen } from './screens/CollegeSelectionScreen';
+import DashboardScreen from './screens/DashboardScreen';
 
-function Router() {
-  const { screen } = useApp();
+const MainNavigator: React.FC = () => {
+  const { selectedCollege } = useApp();
 
-  switch (screen.name) {
-    case 'login':
-      return <LoginScreen />;
-    case 'courses':
-      return <CoursesScreen semester={screen.semester} />;
-    case 'course':
-      return <CourseReviewScreen courseId={screen.courseId} />;
-    case 'dashboard':
-      return <DashboardScreen />;
-    default:
-      return <LoginScreen />;
+  // إذا لم يتم اختيار كلية بعد، تظهر شاشة الاختيار أولاً
+  if (!selectedCollege) {
+    return <CollegeSelectionScreen />;
   }
-}
 
-export default function App() {
+  // عرض لوحة التحكم الرئيسية الخاصة بالتطبيق
+  return <DashboardScreen />;
+};
+
+export function App() {
   return (
     <AppProvider>
-      <Router />
+      <MainNavigator />
     </AppProvider>
   );
 }
+
+export default App;

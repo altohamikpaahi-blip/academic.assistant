@@ -1,29 +1,43 @@
+// src/components/Header.tsx
 import React from 'react';
 import { useApp } from '../context/AppContext';
+import { Building2, RotateCcw } from 'lucide-react';
 
-export function Header({ title, showBack = false }: { title: string; showBack?: boolean }) {
-  const { goBack, darkMode, toggleDarkMode } = useApp();
+export const Header: React.FC = () => {
+  const { selectedCollege, setSelectedCollege, selectedSemester, setSelectedSemester } = useApp();
+
   return (
-    <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800">
-      <div className="flex items-center gap-2">
-        {showBack && (
+    <header className="bg-white shadow-sm border-b border-gray-200 px-4 py-3 flex justify-between items-center" dir="rtl">
+      <div className="flex items-center space-x-3 space-x-reverse">
+        <div className="bg-indigo-50 p-2 rounded-lg text-indigo-600">
+          <Building2 className="w-5 h-5" />
+        </div>
+        <div>
+          <h1 className="text-sm font-bold text-gray-900">{selectedCollege?.name}</h1>
+          {selectedSemester && (
+            <p className="text-xs text-gray-500">{selectedSemester.name}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center space-x-2 space-x-reverse">
+        {selectedSemester && (
           <button
-            onClick={goBack}
-            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
-            aria-label="رجوع"
+            onClick={() => setSelectedSemester(null)}
+            className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md transition-colors"
           >
-            ←
+            تغيير السمستر
           </button>
         )}
-        <h1 className="text-lg font-bold">{title}</h1>
+        <button
+          onClick={() => setSelectedCollege(null)}
+          className="flex items-center text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-3.5 py-1.5 rounded-md transition-colors font-medium"
+          title="تغيير الكلية"
+        >
+          <RotateCcw className="w-3.5 h-3.5 ml-1.5" />
+          تغيير الكلية
+        </button>
       </div>
-      <button
-        onClick={toggleDarkMode}
-        className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
-        aria-label="تبديل الوضع الليلي"
-      >
-        {darkMode ? '☀️' : '🌙'}
-      </button>
-    </div>
+    </header>
   );
-}
+};
